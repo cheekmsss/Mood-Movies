@@ -33,7 +33,7 @@ function App() {
     try {
       const endpoint = `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`
       const response = await  fetch(endpoint, API_OPTIONS)
-      await alert(response)
+      // await alert(response)
       if(!response.ok){
         throw new Error('Failed to fetch movies')
       }
@@ -84,15 +84,17 @@ function App() {
                 )  :     
                   <ul className='all-movies'>
                     {movies.map((movie) =>(
-                    <div key={movie.id} className='movie-card'>
-                        <img src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}></img>
-                        <p className='text-white'>{movie.title}</p> // always include a key when mapping elements, must be unique 
-                    </div>
+                     <MovieCard key={movie.id} movie={movie}/>
+                  //   <div key={movie.id} className='movie-card'>
+                  //       <img src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}></img>
+                  //       <p className='text-white'>{movie.title}</p> // always include a key when mapping elements, must be unique 
+                  //       <p className='text-white'>{movie.vote_average}</p>
+                  //       {/* <p>{movie.genre}</p> */}
+                  //       {/* <img src="/star.svg"> </img> */}
+                  //   </div>
                         ))} 
                     </ul>}
-                    {/* <MovieCard {movies, setMovies}/> */}
 
-                {/* {errorMessaage && <p className='text-red-500' >{errorMessaage}</p>} */}
                 </section>
                   
             </div>
