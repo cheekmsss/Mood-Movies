@@ -4,6 +4,9 @@ import viteLogo from '/vite.svg'
 // import './App.css'
 // import Header from './componenets/header'
 import Search from './componenets/search'
+import MovieCard from './componenets/MovieCard'
+import Spinner from './componenets/Spinner'
+
 
 const API_BASE_URL = "https://api.themoviedb.org/3/"
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -22,6 +25,7 @@ function App() {
   const [errorMessaage, setErrorMessage] = useState('');
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false)
+  
 
   const fetchMovies = async () => {
     setIsLoading(true);
@@ -72,16 +76,22 @@ function App() {
                 </header>
 
                 <section className='all-movies'>
-                  <h2> All Movies </h2>
+                  <h2 className='mt-[20px]'> All Movies </h2>
                   {isLoading ? (
-                    <p className='text-white'>Loading...</p>
-                  ) : errorMessaage ? (<p className='text-red-500' >{errorMessaage}</p>) : (
-                  <ul>
-                     {movies.map((movie) =>(
-                      <p key={movie.id} className='text-white'>{movie.title}</p> // always include a key when mapping elements, must be unique 
-                     ))} 
-                    </ul> )
-                  }
+                    <Spinner/>
+                  ): errorMessaage ? (
+                  <p className='text-red-500' >{errorMessaage}</p>
+                )  :     
+                  <ul className='all-movies'>
+                    {movies.map((movie) =>(
+                    <div key={movie.id} className='movie-card'>
+                        <img src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}></img>
+                        <p className='text-white'>{movie.title}</p> // always include a key when mapping elements, must be unique 
+                    </div>
+                        ))} 
+                    </ul>}
+                    {/* <MovieCard {movies, setMovies}/> */}
+
                 {/* {errorMessaage && <p className='text-red-500' >{errorMessaage}</p>} */}
                 </section>
                   
