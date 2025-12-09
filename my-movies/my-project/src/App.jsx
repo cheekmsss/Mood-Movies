@@ -6,6 +6,8 @@ import viteLogo from '/vite.svg'
 import Search from './componenets/search'
 import MovieCard from './componenets/MovieCard'
 import Spinner from './componenets/Spinner'
+import { useDebounce } from 'react-use'
+
 
 
 const API_BASE_URL = "https://api.themoviedb.org/3/"
@@ -25,13 +27,23 @@ function App() {
   const [errorMessaage, setErrorMessage] = useState('');
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false)
+  const [debouncedSearch , setDebouncedSearch] = useState('')
+
+
+  // debounce the search term to only search aftr user has stopped tying for 500ms
+  // prevents making too many API calls 
+  useDebounce(()=>setDebouncedSearch(searchTerm), 500, [searchTerm])
+  
   
 
-  const fetchMovies = async () => {
+  const fetchMovies = async (query = '') => {
     setIsLoading(true);
     setErrorMessage('');
     try {
-      const endpoint = `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`
+      const endpoint = query 
+      ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}`
+      : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`
+  
       const response = await  fetch(endpoint, API_OPTIONS)
       // await alert(response)
       if(!response.ok){
@@ -47,7 +59,6 @@ function App() {
         setMovies([])
         return
       }
-
       setMovies(data.results || []);
 
     } catch(err){
@@ -60,8 +71,8 @@ function App() {
 
 
   useEffect(()=>{
-    fetchMovies()
-  }, []) // [] makes sure that effect is used only on first render of applicaiton
+    fetchMovies(debouncedSearch)
+  }, [debouncedSearch]) // [] makes sure that effect is used only on first render of applicaiton
 
   return (
     <>
